@@ -1,11 +1,14 @@
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
-namespace MyBlog.Data.Models
+namespace MyBlog.Areas.Admin.Models
 {
-    public class Author
+    public class AuthorViewModel
     {
-        public int Id {get;set;}
+        
 
+        #region Model Properties
+
+        [Required, MinLength(3), MaxLength(20)]
         public string FirstName {get;set;}
 
         public string LastName {get;set;}
@@ -16,8 +19,9 @@ namespace MyBlog.Data.Models
 
         public string FullBio {get;set;}
 
+        [Required]
         public string Permalink {get;set;}
 
-        public ICollection<Post> Posts { get; set; }
+        #endregion    
     }
 }

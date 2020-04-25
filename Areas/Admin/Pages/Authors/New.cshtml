@@ -1,0 +1,91 @@
+﻿@page
+@model MyBlog.Admin.Pages.Authors.NewModel
+@{
+    ViewData["Title"] = "New Author";
+    ViewData["PageTitle"] = "Authors";
+}
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <a asp-page="Index" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-angle-left"></i>
+                    Back
+                </a>
+            </div>
+            <div class="col-md-6 text-right"></div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">New Author</h3>
+            </div>
+            <form method="post">    
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <img src="/admin/dist/img/user1-128x128.jpg" alt="Author Photo" class="img-circle img-fluid">
+                            <br>
+                            <button class="btn btn-primary"><i class="fas fa-upload"></i> Upload Photo</button>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="Author.FirstName"></label>
+                                        <input asp-for="Author.FirstName" type="text" class="form-control">
+                                        <span asp-validation-for="Author.FirstName"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="Author.LastName"></label>
+                                        <input asp-for="Author.LastName" type="text" class="form-control">
+                                        <span asp-validation-for="Author.LastName"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Author.JobTitle"></label>
+                                <input asp-for="Author.JobTitle" type="text" class="form-control">
+                                <span asp-validation-for="Author.JobTitle"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Author.Permalink"></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">http://localhost:5000/authors/</span>
+                                    </div>
+                                    <input asp-for="Author.Permalink" type="text" class="form-control">
+                                </div>
+                                <span class="text-muted form-text">Permalink should be characters and numbers only.</span>
+                                <span asp-validation-for="Author.Permalink"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Author.ShortBio">Short Bio</label>
+                                <textarea asp-for="Author.ShortBio" rows="2" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label asp-for="Author.FullBio">Full Bio</label>
+                                <textarea asp-for="Author.FullBio" rows="5" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> 
+
+@section Scripts
+{
+    <partial name="_ValidationScripts"></partial>
+}
