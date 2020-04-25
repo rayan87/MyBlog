@@ -30,16 +30,18 @@
                             <button class="btn btn-primary"><i class="fas fa-upload"></i> Upload Photo</button>
                         </div>
                         <div class="col-md-8">
+                            <div asp-validation-summary="All" class="text-danger"></div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label asp-for="Author.FirstName">First Name</label>
+                                        <label asp-for="Author.FirstName"></label>
                                         <input asp-for="Author.FirstName" type="text" class="form-control">
+                                        <span asp-validation-for="Author.FirstName" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label asp-for="Author.LastName">Last Name</label>
+                                        <label asp-for="Author.LastName"></label>
                                         <input asp-for="Author.LastName" type="text" class="form-control">
                                     </div>
                                 </div>
@@ -81,3 +83,8 @@
         </div>
     </div>
 </div> 
+
+@section Scripts
+{
+    <partial name="_ValidationScripts"></partial>
+}
