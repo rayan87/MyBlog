@@ -28,8 +28,7 @@ namespace MyBlog.Admin.Pages.Categories
                     Id = x.Id,
                     Name = x.Name,
                     Posts = x.CategoryPosts.Count()
-                })
-                .ToListAsync();
+                }).ToListAsync();
         }
 
         public async Task<IActionResult> OnDeleteAsync(int id)

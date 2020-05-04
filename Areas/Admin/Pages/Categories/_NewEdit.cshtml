@@ -1,0 +1,14 @@
+@model CategoryViewModel
+<div class="card bg-light">
+    <form method="post">
+        <div class="card-body">
+            <div class="form-group">
+                <label asp-for="Name">Name</label>
+                <input asp-for="Name" type="text" class="form-control">
+            </div>
+        </div>
+        <div class="card-footer text-center">
+            <button class="btn btn-primary"><i class="far fa-save"></i> Save</button>
+        </div>
+    </form>
+</div>

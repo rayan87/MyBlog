@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MyBlog.Areas.Admin.Models
+namespace MyBlog.Admin.Models
 {
     public class AuthorViewModel
     {
@@ -22,10 +22,10 @@ namespace MyBlog.Areas.Admin.Models
         public string FullBio {get;set;}
 
         [Required]
-        [PageRemote(PageHandler="CheckPermalinkValidity",
-        ErrorMessage="Permalink already exists",
-        AdditionalFields="__RequestVerificationToken,id",
-        HttpMethod="post")]
+        // [PageRemote(PageHandler="CheckPermalinkValidity",
+        // ErrorMessage="Permalink already exists",
+        // AdditionalFields="__RequestVerificationToken,Id",
+        // HttpMethod="post")]
         public string Permalink {get;set;}
     }
 }

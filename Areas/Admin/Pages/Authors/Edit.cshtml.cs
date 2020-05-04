@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using MyBlog.Areas.Admin.Models;
+using MyBlog.Admin.Models;
 using MyBlog.Data;
 
 namespace MyBlog.Admin.Pages.Authors
@@ -52,6 +52,8 @@ namespace MyBlog.Admin.Pages.Authors
             entity.Permalink = Author.Permalink;
 
             await _dbContext.SaveChangesAsync();
+
+            this.InformUser(FormResult.Updated, $"{entity.FirstName} {entity.LastName}", "author");
             return RedirectToPage("Index");
         }
 

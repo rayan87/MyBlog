@@ -1,8 +1,8 @@
 ﻿@page "{id:int}"
 @model MyBlog.Admin.Pages.Categories.EditModel
 @{
-    ViewData["Title"] = "Edit Category (" + Model.Name + ")";
-    ViewData["PageTitle"] = "Categories";
+    ViewData["Title"] = "Edit Category";
+    ViewData["SubTitle"] = Model.Category.Name;
 }
 
 <div class="row">
@@ -16,23 +16,7 @@
             </div>
             <div class="col-md-6 text-right"></div>
         </div>
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Edit Category</h3>
-            </div>
-            <form method="post">
-                <div class="card-body">
-                    <div class="form-group">
-                        <label asp-for="@Model.Name">Name</label>
-                        <input asp-for="@Model.Name" type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="card-footer text-center">
-                    <button class="btn btn-primary"><i class="far fa-save"></i> Save</button>
-                </div>
-            </form>
-            
-        </div>
+        <partial name="_NewEdit" model="Model.Category">
     </div>
 </div>
 

@@ -1,0 +1,62 @@
+@model AuthorViewModel
+<div class="card bg-light">
+    <form method="post">    
+        <div class="card-body">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    <img src="/admin/dist/img/user1-128x128.jpg" alt="Author Photo" class="img-circle img-fluid">
+                    <br>
+                    <button class="btn btn-primary"><i class="fas fa-upload"></i> Upload Photo</button>
+                </div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="FirstName"></label>
+                                <input asp-for="FirstName" type="text" class="form-control">
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="LastName"></label>
+                                <input asp-for="LastName" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="JobTitle"></label>
+                        <input asp-for="JobTitle" type="text" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Permalink"></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">http://localhost:5000/authors/</span>
+                            </div>
+                            <input asp-for="Permalink" type="text" class="form-control">
+                        </div>
+                        <span class="text-muted form-text">Permalink should be characters and numbers only.</span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ShortBio">Short Bio</label>
+                        <textarea asp-for="ShortBio" rows="2" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label asp-for="FullBio">Full Bio</label>
+                        <textarea asp-for="FullBio" rows="5" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-center">
+            <button class="btn btn-primary">
+                <i class="fas fa-save"></i>
+                Save
+            </button>
+        </div>
+    </form>
+</div>

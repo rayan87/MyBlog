@@ -1,0 +1,78 @@
+﻿@page "{id:int}"
+@model MyBlog.Admin.Pages.Authors.ProfileModel
+@{
+    ViewData["Title"] = $"Author Profile";
+    ViewData["SubTitle"] = $"{Model.Author.FirstName} {Model.Author.LastName}";
+}
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <a asp-page="Index" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-angle-left"></i>
+                    Back
+                </a>
+            </div>
+            <div class="col-md-6 text-right">
+                <a asp-page="Edit" asp-route-id="@Model.Author.Id" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> Edit</a>
+            </div>
+        </div>
+        <div class="card card-primary-outline">
+            <div class="card-header">
+                Author Profile
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="/admin/dist/img/user1-128x128.jpg" alt="Author Photo" class="img-circle img-fluid">
+                    </div>
+                    <div class="col-md-8">
+                        <h3>@Model.Author.FirstName @Model.Author.LastName</h3>
+                        <h4>@Model.Author.JobTitle</h4>
+                        <p>@Model.Author.ShortBio</p>
+                        <p>
+                            <a href="#" class="btn btn-success btn-sm">View Public Profile <i class="fas fa-arrow-alt-circle-right"></i></a>
+                        </p>    
+                    </div>
+                </div>
+                
+                <hr>
+                <p>@Model.Author.FullBio</p>
+            </div>
+            <div class="card-footer text-center">
+                <form asp-page-handler="Delete" method="post">
+                    <input type="hidden" name="id" value="@Model.Author.Id">
+                    <button class="btn btn-danger" onclick="return confirm('Are you sure you want to delete @Model.Author.FirstName profile?')" title="Delete @Model.Author.FirstName Profile"><i class="fas fa-trash"></i> Delete</button>
+                </form>
+            </div>
+        </div>
+        <div class="card card-primary-outline">
+            <div class="card-header">
+                Recent Posts
+            </div>
+            <div class="card-body">
+                @if (Model.RecentPosts.Count > 0)
+                {
+                    <dl>   
+                    @foreach (var post in Model.RecentPosts)
+                    {
+                        <dt>@post.Title</dt>
+                        <dd>@post.Excerpt <a href="#">more details</a></dd>
+                    }
+                    </dl>
+                }
+                else
+                {
+                    <p>No posts have been made recently.</p>
+                }
+            </div>
+            @if (Model.RecentPosts.Count > 0)
+            {
+                <div class="card-footer">
+                    <a href="#" class="btn btn-primary">View @Model.Author.FirstName's Posts <i class="fas fa-arrow-alt-circle-right"></i></a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

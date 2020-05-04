@@ -1,0 +1,63 @@
+﻿@page "{id:int}"
+@model MyBlog.Admin.Pages.Authors.DeleteModel
+@{
+    ViewData["Title"] = "Delete Author";
+    ViewData["SubTitle"] = $"{Model.Author.FirstName} {Model.Author.LastName}";
+}
+
+<div class="row mb-2">
+    <div class="col-md-6">
+        <a asp-page="Index" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-angle-left"></i>
+            Back
+        </a>
+    </div>
+    <div class="col-md-6 text-right">
+        <form method="post">
+            <input type="hidden" asp-for="Id">
+            <button class="btn btn-danger"><i class="fas fa-trash"></i> Delete</button>
+        </form>
+    </div>
+</div>
+<div class="alert alert-danger alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <h5><i class="icon fas fa-exclamation-triangle"></i> Warning!</h5>
+    <p>You are about to delete <strong>@Model.Author.FirstName @Model.Author.LastName</strong> profile.</p>
+</div>
+<div class="card">
+    <div class="card-title text-danger">
+        <i class="icon fas fa-exclamation-triangle"></i> The following posts will be also deleted
+    </div>
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Excerpt</th>
+                    <th>Categories</th>
+                    <th>Author</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var post in Model.Author.Posts)
+                {
+                    <tr>
+                        <td>
+                            @post.Title
+                        </td>
+                        <td>@post.Excerpt</td>
+                        <td>
+                            @foreach (var cat in post.CategoryPosts)
+                            {
+                                <a href="#" class="btn btn-outline-primary btn-sm">@cat.Category.Name</a>
+                            }
+                        </td>
+                        <td>
+                            @Model.Author.FirstName @Model.Author.LastName
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

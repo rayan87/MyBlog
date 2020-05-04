@@ -1,0 +1,141 @@
+@model PostViewModel
+
+<form method="post">
+<div class="row mb-2">
+    <div class="col-md-6">
+        <a asp-page="Index" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-angle-left"></i>
+            Back
+        </a>
+    </div>
+    <div class="col-md-6 text-right">
+        <button class="btn btn-primary">
+            <i class="fas fa-save"></i>
+            Save
+        </button>
+        <button asp-route-redirectTo="Edit" class="btn btn-success">
+            <i class="fas fa-sync"></i>
+            Save &amp; Continue Edit
+        </button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-9">
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-edit"></i> Post</h3>
+                @if (Model.LastUpdateDate.HasValue)
+                {
+                    <div class="card-tools">
+                        <span class="text-muted">Last update on @Model.LastUpdateDate.Value.ToString("d MMM yyyy hh:mm tt")</span>
+                    </div>
+                }
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    @* <label asp-for="Title"></label> *@
+                    <input type="text" asp-for="Title" class="form-control form-control-lg" placeholder="Post Title">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Permalink"></label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">http://localhost:5000/posts/</span>
+                        </div>
+                        <input type="text" class="form-control" asp-for="Permalink">
+                    </div>
+                </div>
+                <div class="form-group">
+                    @* <label asp-for="Description"></label> *@
+                    <textarea asp-for="Description" class="form-control editor" rows="10" placeholder="Post Description"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="card card-secondary card-outline">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-quote-right"></i> Excerpt (Optional)</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-angle-down"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="callout callout-warning">
+                    <p><strong><i class="fas fa-lightbulb"></i> Tip:</strong> If you do not insert excerpt, 
+                    the first paragraph of your post description will be inserted into excerpt automatically.</p>
+                </div>
+                <textarea class="form-control" asp-for="Excerpt"></textarea>
+            </div>
+        </div>
+        <div class="card card-secondary card-outline">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-tags"></i> Tags (Optional)</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-angle-down"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <input type="text" asp-for="Tags" class="form-control form-control-sm" placeholder="Paris,Love Traveling,Cooking">
+                    <p class="form-text text-muted">Tags must be seperated by , (comma)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-folder"></i> Categories</h3>
+            </div>
+            <div class="card-body">
+                @foreach (var cat in Model.CategoriesSelectList)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" id="cat-@cat.Value" name="SelectedCategories" type="checkbox" value="@cat.Value" @(cat.Selected ? "checked" : "")>
+                        <label class="form-check-label" for="cat-@cat.Value">@cat.Text</label>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-user"></i> Author
+                </h3>
+            </div>
+            <div class="card-body">
+                <select asp-for="AuthorId" asp-items="Model.AuthorsSelectList" class="form-control">
+                    <option value="">Select</option>
+                </select>
+            </div>
+        </div>
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-file"></i> Publish Options</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <div class="form-check">
+                        <input class="form-check-input" name="publish" type="checkbox" checked>
+                        <label class="form-check-label">Publish</label>
+                    </div>
+                </div>
+                @if (Model.CreationDate.HasValue)
+                {
+                    <p><i class="fas fa-calendar"></i> Posted on <strong>@Model.CreationDate.Value.ToString("d MMM yyyy hh:mm tt")</strong></p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+
+@section Scripts
+{
+    <script>
+        alert('Hello');
+    </script>
+}

@@ -1,0 +1,188 @@
+﻿@page
+@model MyBlog.Admin.Pages.Posts.IndexModel
+@{
+    ViewData["Title"] = "Posts";
+}
+
+<div class="row mb-2">
+    <div class="col-md-6"></div>
+    <div class="col-md-6 text-right">
+        <a asp-page="New" class="btn btn-primary btn-sm">
+            <i class="fa fa-plus"></i>
+            New
+        </a>
+    </div>
+</div>
+<partial name="_FormResult">
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            @Model.SubTitle
+            @if (!string.IsNullOrEmpty(Model.search))
+            {
+                <text>|</text>
+                <small>Search result for "@Model.search". <a asp-page="Index">reset search</a></small>
+            }
+        </h3>
+        <div class="card-tools">
+            <form method="get">
+            <div class="input-group">
+                @*<div class="input-group-prepend">
+                    <button type="button" 
+                            class="btn btn-default" 
+                            data-toggle="dropdown">Filter by <i class="fas fa-angle-down"></i></button>
+                    <div id="filter-menu" class="dropdown-menu">
+                        <div class="px-4 py-3">
+                            <div class="form-group">
+                                <label>Author</label>
+                                <select asp-for="authorId" asp-items="Model.AuthorSelectList" class="form-control">
+                                    <option value="">Select All</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Category</label>
+                                <select asp-for="categoryId" asp-items="Model.CategorySelectList" class="form-control">
+                                    <option value="">Select All</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                        </div>
+                    </div>
+                </div>*@
+                
+                <input type="text" asp-for="search" class="form-control" placeholder="Search">
+
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                    <button type="button" 
+                            class="btn btn-@(Model.authorId.HasValue || Model.categoryId.HasValue ? "primary" : "default")" 
+                            data-toggle="dropdown"><i class="fas fa-filter"></i></button>
+                    <div id="filter-menu" class="dropdown-menu">
+                        <div class="px-4 py-3">
+                            <div class="form-group">
+                                <label>Author</label>
+                                <select asp-for="authorId" asp-items="Model.AuthorSelectList" class="form-control">
+                                    <option value="">Select All</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Category</label>
+                                <select asp-for="categoryId" asp-items="Model.CategorySelectList" class="form-control">
+                                    <option value="">Select All</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                        </div>
+                    </div>
+                    <div class="btn-group dropleft">
+                        <button data-toggle="dropdown" class="btn btn-@(Model.Sort.HasValue ? "success" : "default")"><i class="fas fa-sort-amount-down"></i></button>
+                        <div class="dropdown-menu">
+                            @foreach (var sort in Enum.GetNames(typeof(PostSortBy)))
+                            {
+                                bool isSelected = Model.Sort.ToString() == sort;
+                                <a class="dropdown-item @(isSelected ? "active" : "")"
+                                    asp-page="Index" 
+                                    asp-route-categoryId="@Model.categoryId"
+                                    asp-route-authorId="@Model.authorId"
+                                    asp-route-search="@Model.search"
+                                    asp-route-sort="@sort">
+                                    @if (isSelected)
+                                    {
+                                        <i class="fas fa-check"></i>
+                                    }
+                                    @sort
+                                </a>
+                            }
+                        </div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+            </form>
+        </div>
+    </div>
+    <div class="card-body">
+        @if (Model.Posts.Count > 0)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Categories</th>
+                        <th>Author</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var post in Model.Posts)
+                    {
+                        <tr id="record-@post.Id">
+                            <td>@post.Title</td>
+                            <td>
+                                @foreach (var category in post.CategoryPosts)
+                                {
+                                    <a asp-page="Index" asp-route-categoryId="@category.CategoryId" class="btn btn-outline-primary btn-sm">@category.Category.Name</a>
+                                }
+                            </td>
+                            <td><a asp-page="../Authors/Profile" asp-route-id="@post.AuthorId" title="Visit Author's Profile">@post.Author.FirstName @post.Author.LastName</a></td>
+                            <td>
+                                <a asp-page="Edit" asp-route-id="@post.Id" class="btn btn-primary btn-sm"><i class="fas fa fa-edit"></i> Edit</a>
+                                <button type="button" 
+                                    title="Delete Post"
+                                    class="btn btn-danger btn-sm btn-delete"
+                                    data-name="@post.Title"
+                                    data-id="@post.Id"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.AntiForgeryToken()
+        }
+        else 
+        {
+            <p>No data available.</p>
+        }
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script>
+        $('#filter-menu.dropdown-menu').click(function(e) {
+            e.stopPropagation();
+        });
+
+        $('.btn-delete').on('click', function () {
+            let id = $(this).data('id');
+            let name = $(this).data('name');
+
+            if (!confirm(`Are you sure you want to delete ${name}`))
+                return;
+            
+            deleteItem(id);
+        });
+
+        function deleteItem(id) {
+            let antiForgeryToken = $('input[name=__RequestVerificationToken]').val();
+
+            $.ajax({
+                url: '@Url.Page("Index")',
+                method: 'DELETE',
+                data: `id=${id}&__RequestVerificationToken=${antiForgeryToken}`,
+                success: function (response) {
+                    if (response == "1") {
+                        $('#record-' + id).hide('fast', function () {
+                            $(this).remove();
+                        });
+                    }
+                },
+                error: function () {
+                    alert('Cannot delete category.');
+                }
+            });
+        }
+    </script>
+}

@@ -15,10 +15,8 @@
                 </a>
             </div>
         </div>
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">List</h3>
-            </div>
+        <partial name="_FormResult">
+        <div class="card bg-light">
             <div class="card-body">
             @if (Model.Categories.Count > 0)
             {
@@ -41,7 +39,7 @@
                                 <button type="button" 
                                     class="btn btn-danger btn-sm btn-delete"
                                     data-name="@cat.Name"
-                                    data-id="@cat.Id"><i class="fas fa fa-trash"></i></button>
+                                    data-id="@cat.Id"><i class="fas fa-trash"></i></button>
                             </td>
                         </tr>
                     }

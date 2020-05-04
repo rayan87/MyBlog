@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace MyBlog.Data.Models
@@ -17,6 +18,10 @@ namespace MyBlog.Data.Models
         public string Tags {get;set;}
 
         public string Permalink {get;set;}
+
+        public DateTime CreationDate {get;set;}
+
+        public DateTime LastUpdateDate {get;set;}
 
         public Author Author {get;set;}
 

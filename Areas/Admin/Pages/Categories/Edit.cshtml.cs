@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using MyBlog.Admin.Models;
 using MyBlog.Data;
 
 namespace MyBlog.Admin.Pages.Categories
@@ -23,7 +24,7 @@ namespace MyBlog.Admin.Pages.Categories
             if (category == null)
                 return NotFound();
 
-            Name = category.Name;
+            Category = new CategoryViewModel() { Name = category.Name };
             return Page();
         }
 
@@ -33,15 +34,21 @@ namespace MyBlog.Admin.Pages.Categories
             if (category == null)
                 return BadRequest();
 
-            category.Name = Name;
+            category.Name = Category.Name;
             await _dbContext.SaveChangesAsync();
-            return RedirectToPage("Index", new { result = "updated" });
+
+            this.InformUser(FormResult.Updated, category.Name, "category");
+            return RedirectToPage("Index");
         }
 
         [BindProperty(SupportsGet=true)]
         public int Id {get;set;}
 
         [BindProperty]
-        public string Name {get;set;}
+        public CategoryViewModel Category
+        {
+            get;
+            set;
+        }
     }
 }

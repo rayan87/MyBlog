@@ -1,18 +1,13 @@
 @{
   string title = (string)ViewData["Title"];
-  string pageTitle = (string)ViewData["PageTitle"];
-  string pageSubTitle = (string)ViewData["PageSubTitle"];
-  if (string.IsNullOrEmpty(pageTitle))
-  {
-    pageTitle = title;
-  }
+  string subTitle = (string)ViewData["SubTitle"];
 }
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>@title | My Blog Admin Area</title>
+  <title>@title @(!string.IsNullOrEmpty(subTitle) ? " - " + subTitle : "") | My Blog Admin Area</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Font Awesome -->
@@ -70,7 +65,7 @@
         </div>
       </div>
 
-      <partial name="_MainMenu"></partial>
+      <partial name="_MainMenu">
     </div>
     <!-- /.sidebar -->
   </aside>
@@ -83,11 +78,7 @@
         <div class="row mb-2">
           <div class="col-sm-12 text-center">
             <h1 class="m-0 text-dark">
-              @pageTitle
-              @if (!string.IsNullOrEmpty(pageSubTitle))
-              {
-                <small>@pageSubTitle</small>
-              }
+              @title
             </h1>
           </div>
         </div><!-- /.row -->

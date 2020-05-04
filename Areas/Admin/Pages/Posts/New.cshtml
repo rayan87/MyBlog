@@ -1,0 +1,25 @@
+﻿@page
+@model MyBlog.Admin.Pages.Posts.NewModel
+@{
+    ViewData["Title"] = "Add New Post";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="/admin/plugins/summernote/summernote-bs4.css">
+}
+
+<partial name="_NewEdit" model="Model.Post">
+
+@section Scripts
+{
+    <script src="/admin/plugins/summernote/summernote-bs4.min.js"></script>
+    <script>
+        $(function () {
+            // Summernote
+            $('.editor').summernote({
+                height: 300
+            });
+        })
+    </script>
+}

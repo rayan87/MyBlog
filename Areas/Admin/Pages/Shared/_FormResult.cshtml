@@ -1,0 +1,37 @@
+@{
+    var operationObj = TempData["Operation"];
+}
+
+@if (operationObj != null)
+{
+    FormResult operation = (FormResult)operationObj;
+    var itemName = (string)TempData["ItemName"];
+    var moduleName =(string)TempData["ModuleName"];
+
+    string iconCss, alertCss;
+    if (operation == FormResult.Added)
+    {
+        iconCss = "plus";
+        alertCss = "success";
+    }
+    else if (operation == FormResult.Updated)
+    {
+        iconCss = "edit";
+        alertCss = "success";
+    }
+    else if (operation == FormResult.Deleted)
+    {
+        iconCss = "trash";
+        alertCss = "warning";
+    }
+    else
+    {
+        iconCss = "info";
+        alertCss = "info";
+    }
+
+    <div class="alert alert-@alertCss alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <i class="icon fas fa-@iconCss"></i> <b>@itemName</b> @moduleName was @operation.ToString().ToLower()
+    </div>
+}
