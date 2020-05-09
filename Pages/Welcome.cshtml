@@ -1,0 +1,24 @@
+﻿@page
+@model MyBlog.Pages.WelcomeModel
+@{
+}
+
+<h1>Welcome Page</h1>
+<table>
+    <tr>
+        <th>@nameof(Model.ApplicationName)</th>
+        <td>@Model.ApplicationName</td>
+    </tr>
+    <tr>
+        <th>@nameof(Model.ContentRootPath)</th>
+        <td>@Model.ContentRootPath</td>
+    </tr>
+    <tr>
+        <th>@nameof(Model.EnvironmentName)</th>
+        <td>@Model.EnvironmentName</td>
+    </tr>
+    <tr>
+        <th>@nameof(Model.WebRootPath)</th>
+        <td>@Model.WebRootPath</td>
+    </tr>
+</table>

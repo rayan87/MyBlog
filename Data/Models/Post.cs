@@ -19,6 +19,8 @@ namespace MyBlog.Data.Models
 
         public string Permalink {get;set;}
 
+        public string ImageUrl {get;set;}
+
         public DateTime CreationDate {get;set;}
 
         public DateTime LastUpdateDate {get;set;}

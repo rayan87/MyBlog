@@ -33,7 +33,9 @@
                     {
                         <tr id="record-@cat.Id">
                             <td>@cat.Name</td>
-                            <td><a href="#">(@cat.Posts) Posts</a></td>
+                            <td>
+                                <a asp-page="/Posts/Index" asp-route-categoryId="@cat.Id">(@cat.Posts) Posts</a>
+                            </td>
                             <td>
                                 <a asp-page="Edit" asp-route-id="@cat.Id" class="btn btn-primary btn-sm"><i class="fas fa fa-edit"></i> Edit</a>
                                 <button type="button" 

@@ -16,6 +16,9 @@ namespace MyBlog.Data.Configurations
                 .IsRequired()
                 .HasMaxLength(500);
 
+            builder.Property(x => x.ImageUrl)
+                .HasMaxLength(500);
+
             //builder.HasMany(x => x.Categories);
             //builder.HasOne(x => x.Author);
         }

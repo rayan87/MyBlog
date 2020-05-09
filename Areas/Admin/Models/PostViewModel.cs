@@ -4,12 +4,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using MyBlog.Data.Models;
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace MyBlog.Admin.Models
 {
     public class PostViewModel
     {
-        [Display(Name = "Title", Description="Post Title")]
+        public int? Id { get; set; }
+
+        [Display(Name = "Title", Description="Post Title"), Required]
         public string Title {get;set;}
 
         [Display(Name = "Description", Description="Post Description")]
@@ -30,8 +34,15 @@ namespace MyBlog.Admin.Models
 
         public List<SelectListItem> AuthorsSelectList {get;set;}
 
-        [Display(Name = "Permalink"), Required]
+        [Display(Name = "Permalink"), Required, PageRemote(
+            ErrorMessage ="Permalink already exists", 
+            AdditionalFields = "__RequestVerificationToken", 
+            HttpMethod ="post",  
+            PageHandler ="CheckPermalink"
+        )]
         public string Permalink {get;set;}
+
+        public IFormFile ImageFile {get;set;}
 
         [Display(Name = "Last Update Date")]
         public DateTime? LastUpdateDate {get;set;}

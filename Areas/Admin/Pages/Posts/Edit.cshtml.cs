@@ -67,6 +67,18 @@ namespace MyBlog.Admin.Pages.Posts
                 return RedirectToPage("Index");
         }
 
+        public async Task<IActionResult> OnPostDeleteAsync()
+        {
+            var entity = await _dbContext.Posts.FindAsync(Id);
+            if (entity == null)
+                return NotFound();
+
+            _dbContext.Posts.Remove(entity);
+            await _dbContext.SaveChangesAsync();
+            this.InformUser(FormResult.Deleted, entity.Title, "post");
+            return RedirectToPage("Index");
+        }
+
         private async Task prepareModelSelectLists()
         {
             //Categories List
@@ -91,6 +103,7 @@ namespace MyBlog.Admin.Pages.Posts
         {
             Post = new PostViewModel()
             {
+                Id = post.Id,
                 Title = post.Title,
                 Description = post.Description,
                 Excerpt = post.Excerpt,

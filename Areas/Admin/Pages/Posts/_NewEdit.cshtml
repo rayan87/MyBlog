@@ -5,7 +5,7 @@
     <div class="col-md-6">
         <a asp-page="Index" class="btn btn-outline-secondary btn-sm">
             <i class="fas fa-angle-left"></i>
-            Back
+            Back to Posts
         </a>
     </div>
     <div class="col-md-6 text-right">
@@ -17,13 +17,26 @@
             <i class="fas fa-sync"></i>
             Save &amp; Continue Edit
         </button>
+        @if (Model.Id.HasValue)
+        {
+            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                Action
+            </button>
+            <div class="dropdown-menu">
+                <a asp-page="New" asp-route-sourceId="@Model.Id"
+                    class="dropdown-item" 
+                    title="Copies this post into another post">
+                    <i class="far fa-copy text-success"></i> Duplicate</a>
+                <button class="dropdown-item" title="Delete Post" asp-page-handler="Delete" onclick="return confirm('Are you sure you want to delete this post?');"><i class="far fa-trash-alt text-danger"></i> Delete</button>
+            </div>
+        }
     </div>
 </div>
 <div class="row">
     <div class="col-md-9">
         <div class="card card-primary card-outline">
             <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-edit"></i> Post</h3>
+                <h3 class="card-title"><i class="fas fa-edit"></i> Post </h3>
                 @if (Model.LastUpdateDate.HasValue)
                 {
                     <div class="card-tools">
@@ -33,8 +46,8 @@
             </div>
             <div class="card-body">
                 <div class="form-group">
-                    @* <label asp-for="Title"></label> *@
                     <input type="text" asp-for="Title" class="form-control form-control-lg" placeholder="Post Title">
+                    <span asp-validation-for="Title"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Permalink"></label>
@@ -43,10 +56,10 @@
                             <span class="input-group-text">http://localhost:5000/posts/</span>
                         </div>
                         <input type="text" class="form-control" asp-for="Permalink">
+                        <span asp-validation-for="Permalink"></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    @* <label asp-for="Description"></label> *@
                     <textarea asp-for="Description" class="form-control editor" rows="10" placeholder="Post Description"></textarea>
                 </div>
             </div>
@@ -91,6 +104,7 @@
                 <h3 class="card-title"><i class="fas fa-folder"></i> Categories</h3>
             </div>
             <div class="card-body">
+                <span asp-validation-for="SelectedCategories"></span>
                 @foreach (var cat in Model.CategoriesSelectList)
                 {
                     <div class="form-check">
@@ -110,6 +124,7 @@
                 <select asp-for="AuthorId" asp-items="Model.AuthorsSelectList" class="form-control">
                     <option value="">Select</option>
                 </select>
+                <span asp-validation-for="AuthorId"></span>
             </div>
         </div>
         <div class="card card-primary card-outline">
@@ -129,13 +144,29 @@
                 }
             </div>
         </div>
+        @* <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-image"></i> Image</h3>
+                <div class="card-tools">
+                    <input asp-for="ImageFile" class="d-none">
+                    <label asp-for="ImageFile" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Upload</label>    
+                </div>
+            </div>
+            <div class="card-body">
+                <img class="card-img-top" src="..." alt="Card image cap">
+            </div>
+        </div> *@
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-image"></i> Media</h3>
+            </div>
+            <div class="card-body text-center">
+                <img src="https://via.placeholder.com/1536x768" alt="No Image" title="No Image" class="bg-default img-thumbnail">
+                <input asp-for="ImageFile" class="form-control" accept="image/*">
+                @* <input asp-for="ImageFile" class="d-none">
+                <label asp-for="ImageFile" class="btn btn-primary">Upload Image</label> *@
+            </div>
+        </div>
     </div>
 </div>
 </form>
-
-@section Scripts
-{
-    <script>
-        alert('Hello');
-    </script>
-}

@@ -18,6 +18,8 @@ namespace MyBlog.Data.Models
 
         public string Permalink {get;set;}
 
+        public string ImageUrl {get;set;}
+
         public ICollection<Post> Posts { get; set; }
     }
 }

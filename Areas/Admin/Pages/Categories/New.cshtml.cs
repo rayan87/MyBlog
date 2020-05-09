@@ -24,6 +24,9 @@ namespace MyBlog.Admin.Pages.Categories
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if (!ModelState.IsValid)
+                return Page();
+                
             var category = new Category()
             {
                 Name = Category.Name

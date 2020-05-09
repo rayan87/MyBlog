@@ -18688,11 +18688,11 @@ html.maximized-card {
   margin-bottom: 1rem;
   padding: 1rem;
 }
-
+/* 
 .callout a {
   color: #495057;
   text-decoration: underline;
-}
+} */
 
 .callout a:hover {
   color: #e9ecef;

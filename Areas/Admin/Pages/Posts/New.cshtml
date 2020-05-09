@@ -8,11 +8,22 @@
 {
     <link rel="stylesheet" href="/admin/plugins/summernote/summernote-bs4.css">
 }
+@if (Model.SourceId.HasValue && 
+    !string.IsNullOrEmpty(Model.SourceTitle))
+{
+    <div class="callout callout-warning">
+        <h5>Post Duplicate</h5>
+        <p>Post was copied from <a asp-page="Edit" asp-route-id="@Model.SourceId.Value">@Model.SourceTitle</a>.
+        &nbsp;&nbsp;&nbsp;
+        <a asp-page="New" class="btn btn-danger btn-sm"><i class="fas fa-broom"></i> Clear Form</a></p>
+    </div>    
+}
 
 <partial name="_NewEdit" model="Model.Post">
 
 @section Scripts
 {
+    <partial name="_ValidationScripts">
     <script src="/admin/plugins/summernote/summernote-bs4.min.js"></script>
     <script>
         $(function () {
