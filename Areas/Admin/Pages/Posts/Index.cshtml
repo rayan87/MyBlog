@@ -99,6 +99,7 @@
                     <tr>
                         <th><input type="checkbox" id="check-all" onchange="checkAll()"></th>
                         <th>Title</th>
+                        <th>Posted at</th>
                         <th>Categories</th>
                         <th>Author</th>
                         <th>Action</th>
@@ -110,6 +111,7 @@
                         <tr id="record-@post.Id">
                             <td><input type="checkbox" name="postIds" value="@post.Id" onchange="checkOneRow(this.value, this.checked)"></td>
                             <td>@post.Title</td>
+                            <td>@post.CreationDate.ToString("dd/MM/yyyy")</td>
                             <td>
                                 @foreach (var category in post.CategoryPosts)
                                 {

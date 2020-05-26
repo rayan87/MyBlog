@@ -18,15 +18,12 @@ namespace MyBlog.Admin.Pages.Posts
     public class NewModel : PageModel
     {
         private readonly MyBlogContext _dbContext;
-        private readonly IWebHostEnvironment _environment;
         private readonly IUploadManager _uploadManager;
         
         public NewModel(MyBlogContext dbContext, 
-            IWebHostEnvironment environment,
             IUploadManager uploadManager)
         { 
             _dbContext = dbContext;
-            _environment = environment;
             _uploadManager = uploadManager;
         }
 
@@ -46,10 +43,7 @@ namespace MyBlog.Admin.Pages.Posts
             var entity = Post.ToEntity();
             entity.CreationDate = DateTime.UtcNow;
             entity.LastUpdateDate = DateTime.UtcNow;
-            // if (Post.ImageFile.Length > 0)
-            //     entity.ImageUrl = _uploadManager.SaveFileAsync(
-            //         Post.ImageFile.OpenReadStream(),
-            //         _environment.ContentRootPath)
+            entity.ImageUrl = await _uploadManager.SavePostImageAsync(Post.ImageFile);
             
             await _dbContext.Posts.AddAsync(entity);
             await _dbContext.SaveChangesAsync();

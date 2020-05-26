@@ -11,7 +11,7 @@
             <div class="col-md-6">
                 <a asp-page="Index" class="btn btn-outline-secondary btn-sm">
                     <i class="fas fa-angle-left"></i>
-                    Back
+                    Back to Authors
                 </a>
             </div>
             <div class="col-md-6 text-right">
@@ -25,7 +25,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-4">
-                        <img src="/admin/dist/img/user1-128x128.jpg" alt="Author Photo" class="img-circle img-fluid">
+                        <img src="/@(!string.IsNullOrEmpty(Model.Author.ImageUrl) ? Model.Author.ImageUrl : "admin/dist/img/user1-128x128.jpg")" alt="Author Photo" class="img-circle img-fluid">
                     </div>
                     <div class="col-md-8">
                         <h3>@Model.Author.FirstName @Model.Author.LastName</h3>
@@ -69,8 +69,8 @@
             </div>
             @if (Model.RecentPosts.Count > 0)
             {
-                <div class="card-footer">
-                    <a href="#" class="btn btn-primary">View @Model.Author.FirstName's Posts <i class="fas fa-arrow-alt-circle-right"></i></a>
+                <div class="card-footer text-center">
+                    <a asp-page="/Posts/Index" asp-route-authorId="@Model.Author.Id" class="btn btn-primary">View @Model.Author.FirstName's Posts <i class="fas fa-arrow-alt-circle-right"></i></a>
                 </div>
             }
         </div>

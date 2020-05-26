@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MyBlog.Admin.Models;
+using MyBlog.Admin.Services;
 using MyBlog.Data;
 using MyBlog.Data.Models;
 
@@ -15,7 +16,13 @@ namespace MyBlog.Admin.Pages.Authors
     public class NewModel : PageModel
     {
         private readonly MyBlogContext _dbContext;
-        public NewModel(MyBlogContext dbContext) => _dbContext = dbContext;
+        private readonly IUploadManager _uploadManager;
+        
+        public NewModel(MyBlogContext dbContext, IUploadManager uploadManager)
+        {
+            _dbContext = dbContext;
+            _uploadManager = uploadManager;
+        }
         
         public void OnGet()
         {
@@ -34,7 +41,8 @@ namespace MyBlog.Admin.Pages.Authors
                 ShortBio = Author.ShortBio,
                 FullBio = Author.FullBio,
                 JobTitle = Author.JobTitle,
-                Permalink = Author.Permalink
+                Permalink = Author.Permalink,
+                ImageUrl = await _uploadManager.SaveAuthorImageAsync(Author.PhotoFile)
             };
 
             await _dbContext.Authors.AddAsync(author);    

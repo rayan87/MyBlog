@@ -44,6 +44,8 @@ namespace MyBlog.Admin.Models
 
         public IFormFile ImageFile {get;set;}
 
+        public string ImageUrl {get;set;}
+
         [Display(Name = "Last Update Date")]
         public DateTime? LastUpdateDate {get;set;}
 

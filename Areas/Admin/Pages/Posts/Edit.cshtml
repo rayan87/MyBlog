@@ -23,4 +23,38 @@
             });
         })
     </script>
+
+    <!-- Remove image -->
+    
+    <script>
+        function removeImage() {
+            if (!confirm('Are you sure you want to remove main image?'))
+                return;
+
+            var token = $('input[name=__RequestVerificationToken]').val();
+
+            $.ajax({
+                url: '@Url.Page("Edit", "DeleteImage")',
+                method: 'POST',
+                data: {
+                    id: @Model.Id,
+                    __RequestVerificationToken: token
+                },
+                success: function (response) {
+                    if (response) {
+                        let $featuredImage = $('#featured-image');
+                        let placeholder = $featuredImage.data('placeholder');
+                        $featuredImage.attr('src', placeholder);
+                        $('#remove-image-button').hide();
+                    } else {
+                        alert("Cannot remove image");
+                    }
+
+                },
+                error: function () {
+                    alert('An error occurred while submitting your request.');
+                }
+            });
+        }
+    </script>
 }

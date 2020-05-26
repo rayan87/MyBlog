@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MyBlog.Admin.Models
@@ -20,6 +21,10 @@ namespace MyBlog.Admin.Models
 
         [Display(Name = "Full Bio")]
         public string FullBio {get;set;}
+
+        public IFormFile PhotoFile {get;set;}
+
+        public string PhotoUrl {get;set;}
 
         [Required]
         // [PageRemote(PageHandler="CheckPermalinkValidity",

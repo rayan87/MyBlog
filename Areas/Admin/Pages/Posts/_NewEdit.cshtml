@@ -1,6 +1,6 @@
 @model PostViewModel
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
 <div class="row mb-2">
     <div class="col-md-6">
         <a asp-page="Index" class="btn btn-outline-secondary btn-sm">
@@ -161,11 +161,30 @@
                 <h3 class="card-title"><i class="fas fa-image"></i> Media</h3>
             </div>
             <div class="card-body text-center">
-                <img src="https://via.placeholder.com/1536x768" alt="No Image" title="No Image" class="bg-default img-thumbnail">
+                @{
+                    string imageUrl, imageTitle;
+                    if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        imageUrl = $"/{Model.ImageUrl}";
+                        imageTitle = $"{Model.Title} post image";
+                    }
+                    else
+                    {
+                        imageUrl = "https://via.placeholder.com/1536x768";
+                        imageTitle = "No image";
+                    }
+                }
+                <img id="featured-image" src="@imageUrl" data-placeholder="https://via.placeholder.com/1536x768" alt="@imageTitle" title="@imageTitle" class="bg-default img-thumbnail">
+                <label asp-for="ImageFile">Upload an image</label>
                 <input asp-for="ImageFile" class="form-control" accept="image/*">
-                @* <input asp-for="ImageFile" class="d-none">
-                <label asp-for="ImageFile" class="btn btn-primary">Upload Image</label> *@
             </div>
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <div class="card-footer text-center">
+                    @* <button class="btn btn-primary btn-sm" type="button" onclick="document.getElementById('@Html.IdFor(x => x.ImageFile)').click();"><i class="fas fa-upload"></i> Upload</button> *@
+                    <button class="btn btn-danger btn-sm" id="remove-image-button" title="Remove Image" type="button" onclick="removeImage();"><i class="far fa-trash-alt"></i> Remove</button>
+                </div>
+            }
         </div>
     </div>
 </div>

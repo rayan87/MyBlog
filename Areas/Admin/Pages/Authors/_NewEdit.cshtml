@@ -1,12 +1,16 @@
 @model AuthorViewModel
 <div class="card bg-light">
-    <form method="post">    
+    <form method="post" enctype="multipart/form-data">    
         <div class="card-body">
             <div class="row">
                 <div class="col-md-4 text-center">
-                    <img src="/admin/dist/img/user1-128x128.jpg" alt="Author Photo" class="img-circle img-fluid">
-                    <br>
-                    <button class="btn btn-primary"><i class="fas fa-upload"></i> Upload Photo</button>
+                    <img src="/@(!string.IsNullOrEmpty(Model?.PhotoUrl) ? Model.PhotoUrl : "admin/dist/img/user1-128x128.jpg")" alt="Author Photo" class="img-circle img-fluid">
+                    <label>Upload a photo</label>
+                    <input asp-for="PhotoFile" class="form-control" accept="image/*" required="@(Model == null)">
+                    @if (Model == null)
+                    {
+                        <span asp-validation-for="PhotoFile" class="text-danger"></span>
+                    }
                 </div>
                 <div class="col-md-8">
                     <div class="row">

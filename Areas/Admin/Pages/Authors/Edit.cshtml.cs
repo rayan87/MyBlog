@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MyBlog.Admin.Models;
+using MyBlog.Admin.Services;
 using MyBlog.Data;
 
 namespace MyBlog.Admin.Pages.Authors
@@ -13,8 +14,14 @@ namespace MyBlog.Admin.Pages.Authors
     public class EditModel : PageModel
     {
         private readonly MyBlogContext _dbContext;
+        private readonly IUploadManager _uploadManager;
 
-        public EditModel(MyBlogContext dbContext) => _dbContext = dbContext;
+        public EditModel(MyBlogContext dbContext, 
+            IUploadManager uploadManager)
+        { 
+            _dbContext = dbContext;
+            _uploadManager = uploadManager;
+        }
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -29,7 +36,8 @@ namespace MyBlog.Admin.Pages.Authors
                 FullBio = author.FullBio,
                 JobTitle = author.JobTitle,
                 Permalink = author.Permalink,
-                ShortBio = author.ShortBio
+                ShortBio = author.ShortBio,
+                PhotoUrl = author.ImageUrl
             };
 
             return Page();
@@ -50,7 +58,10 @@ namespace MyBlog.Admin.Pages.Authors
             entity.FullBio = Author.FullBio;
             entity.ShortBio = Author.ShortBio;
             entity.Permalink = Author.Permalink;
-
+            
+            if (Author.PhotoFile != null && Author.PhotoFile.Length > 0)
+                entity.ImageUrl = await _uploadManager.SaveAuthorImageAsync(Author.PhotoFile);
+            
             await _dbContext.SaveChangesAsync();
 
             this.InformUser(FormResult.Updated, $"{entity.FirstName} {entity.LastName}", "author");
