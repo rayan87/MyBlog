@@ -11,7 +11,7 @@ using MyBlog.Data;
 
 namespace MyBlog.Admin.Pages.Authors
 {
-    public class EditModel : PageModel
+    public class EditModel : AuthorViewModel
     {
         private readonly MyBlogContext _dbContext;
         private readonly IUploadManager _uploadManager;
@@ -29,16 +29,7 @@ namespace MyBlog.Admin.Pages.Authors
             if (author == null)
                 return NotFound();
 
-            Author = new AuthorViewModel() 
-            {
-                FirstName = author.FirstName,
-                LastName = author.LastName,
-                FullBio = author.FullBio,
-                JobTitle = author.JobTitle,
-                Permalink = author.Permalink,
-                ShortBio = author.ShortBio,
-                PhotoUrl = author.ImageUrl
-            };
+            PopulateModel(author);
 
             return Page();
         }
@@ -52,15 +43,15 @@ namespace MyBlog.Admin.Pages.Authors
             if (entity == null)
                 return BadRequest();
 
-            entity.FirstName = Author.FirstName;
-            entity.LastName = Author.LastName;
-            entity.JobTitle = Author.JobTitle;
-            entity.FullBio = Author.FullBio;
-            entity.ShortBio = Author.ShortBio;
-            entity.Permalink = Author.Permalink;
+            entity.FirstName = FirstName;
+            entity.LastName = LastName;
+            entity.JobTitle = JobTitle;
+            entity.FullBio = FullBio;
+            entity.ShortBio = ShortBio;
+            entity.Permalink = Permalink;
             
-            if (Author.PhotoFile != null && Author.PhotoFile.Length > 0)
-                entity.ImageUrl = await _uploadManager.SaveAuthorImageAsync(Author.PhotoFile);
+            if (PhotoFile != null && PhotoFile.Length > 0)
+                entity.ImageUrl = await _uploadManager.SaveAuthorImageAsync(PhotoFile);
             
             await _dbContext.SaveChangesAsync();
 
@@ -68,24 +59,14 @@ namespace MyBlog.Admin.Pages.Authors
             return RedirectToPage("Index");
         }
 
-        public async Task<JsonResult> OnPostCheckPermalinkValidityAsync(int id, string permalink)
+        public async Task<JsonResult> OnPostCheckPermalinkValidityAsync()
         {
             bool permalinkExists = await _dbContext.Authors
                 .AsNoTracking()
-                .AnyAsync(x => x.Id != Id && x.Permalink == Author.Permalink);
+                .AnyAsync(x => x.Id != Id && x.Permalink == Permalink);
             
             var isValid = !permalinkExists;
             return new JsonResult(isValid);
-        }
-
-        [BindProperty(SupportsGet=true)]
-        public int Id {get;set;}
-
-        [BindProperty]
-        public AuthorViewModel Author
-        {
-            get;
-            set;
         }
     }
 }

@@ -13,7 +13,7 @@ using MyBlog.Data.Models;
 
 namespace MyBlog.Admin.Pages.Authors
 {
-    public class NewModel : PageModel
+    public class NewModel : AuthorViewModel
     {
         private readonly MyBlogContext _dbContext;
         private readonly IUploadManager _uploadManager;
@@ -36,13 +36,13 @@ namespace MyBlog.Admin.Pages.Authors
                 
             var author = new Author()
             {
-                FirstName = Author.FirstName,
-                LastName = Author.LastName,
-                ShortBio = Author.ShortBio,
-                FullBio = Author.FullBio,
-                JobTitle = Author.JobTitle,
-                Permalink = Author.Permalink,
-                ImageUrl = await _uploadManager.SaveAuthorImageAsync(Author.PhotoFile)
+                FirstName = FirstName,
+                LastName = LastName,
+                ShortBio = ShortBio,
+                FullBio = FullBio,
+                JobTitle = JobTitle,
+                Permalink = Permalink,
+                ImageUrl = await _uploadManager.SaveAuthorImageAsync(PhotoFile)
             };
 
             await _dbContext.Authors.AddAsync(author);    
@@ -52,21 +52,14 @@ namespace MyBlog.Admin.Pages.Authors
             return RedirectToPage("Index");
         }
 
-        public async Task<JsonResult> OnPostCheckPermalinkValidityAsync(string permalink)
+        public async Task<JsonResult> OnPostCheckPermalinkValidityAsync()
         {
             bool permalinkExists = await _dbContext.Authors
                 .AsNoTracking()
-                .AnyAsync(x => x.Permalink == Author.Permalink);
+                .AnyAsync(x => x.Permalink == Permalink);
             
             var isValid = !permalinkExists;
             return new JsonResult(isValid);
-        }
-
-        [BindProperty]
-        public AuthorViewModel Author
-        {
-            get;
-            set;
         }
     }
 }

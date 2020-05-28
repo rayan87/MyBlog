@@ -15,7 +15,7 @@ using MyBlog.Data.Models;
 
 namespace MyBlog.Admin.Pages.Posts
 {
-    public class NewModel : PageModel
+    public class NewModel : PostViewModel
     {
         private readonly MyBlogContext _dbContext;
         private readonly IUploadManager _uploadManager;
@@ -40,22 +40,22 @@ namespace MyBlog.Admin.Pages.Posts
                 return Page();
             }
             
-            var entity = Post.ToEntity();
+            var entity = ToEntity();
             entity.CreationDate = DateTime.UtcNow;
             entity.LastUpdateDate = DateTime.UtcNow;
-            entity.ImageUrl = await _uploadManager.SavePostImageAsync(Post.ImageFile);
+            entity.ImageUrl = await _uploadManager.SavePostImageAsync(ImageFile);
             
             await _dbContext.Posts.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
 
-            this.InformUser(FormResult.Added, Post.Title, "post");
+            this.InformUser(FormResult.Added, Title, "post");
             if (redirectTo == "Edit")
                 return RedirectToPage("Edit", new { id = entity.Id });
             else
                 return RedirectToPage("Index");
         }
 
-        public async Task<JsonResult> OnPostCheckPermalink(string permalink)
+        public async Task<JsonResult> OnPostCheckPermalinkAsync(string permalink)
         {
             bool postExists = await _dbContext.Posts
                 .AsNoTracking()
@@ -66,73 +66,35 @@ namespace MyBlog.Admin.Pages.Posts
 
         private async Task prepareModel()
         {
-            Post sourcePost = null;
+            var categories = await _dbContext.Categories.AsNoTracking()
+                .OrderBy(x => x.Name)
+                .ToListAsync();
+            var authors = await _dbContext.Authors.AsNoTracking()
+                .OrderBy(x => x.FirstName)
+                .ThenBy(x => x.LastName)
+                .ToListAsync();
+
             if (SourceId.HasValue)
-                sourcePost = await _dbContext.Posts
-                    .Include(x => x.CategoryPosts)
-                    .AsNoTracking()
-                    .Where(x => x.Id == SourceId.Value)
-                    .SingleOrDefaultAsync();
-            
-            if (sourcePost != null)
             {
-                SourceTitle = sourcePost.Title;
-                if (Post == null)
+                var sourcePost = await _dbContext.Posts
+                        .Include(x => x.CategoryPosts)
+                        .AsNoTracking()
+                        .Where(x => x.Id == SourceId.Value)
+                        .SingleOrDefaultAsync();
+                if (sourcePost != null)
                 {
-                    Post = new PostViewModel()
-                    {
-                        AuthorId = sourcePost.AuthorId,
-                        Description = sourcePost.Description,
-                        Excerpt = sourcePost.Excerpt,
-                        Permalink = sourcePost.Permalink,
-                        Tags = sourcePost.Tags,
-                        Title = sourcePost.Title,
-                        SelectedCategories = sourcePost.CategoryPosts.Select(y => y.CategoryId).ToArray()
-                    };
-                }
+                    SourceTitle = sourcePost.Title;
+                    PopulateModel(sourcePost);
+                }    
             }
             
-            if (Post == null)
-                Post = new PostViewModel();
-
-            await prepareModelSelectLists();
-        }
-
-        //Make sure you this from prepareModel()
-        private async Task prepareModelSelectLists()
-        {
-            //Categories List
-            Post.CategoriesSelectList = await _dbContext.Categories
-                    .AsNoTracking()
-                    .Select(x => new SelectListItem() { 
-                        Value = x.Id.ToString(), 
-                        Text = x.Name,
-                        Selected = Post.SelectedCategories != null && Post.SelectedCategories.Contains(x.Id)
-                    }).ToListAsync();
-
-            //Authors list
-            Post.AuthorsSelectList = await _dbContext.Authors
-                    .AsNoTracking()
-                    .Select(x => 
-                        new SelectListItem()
-                        {
-                            Text = x.FirstName + " " + x.LastName,
-                            Value = x.Id.ToString()
-                        }
-                    ).ToListAsync();
+            PopulateModelSelectLists(categories, authors);
         }
 
         [BindProperty(SupportsGet=true)]
         public int? SourceId {get;set;}
 
         public string SourceTitle {get;set;}
-
-        [BindProperty]
-        public PostViewModel Post
-        {
-            get;set;
-        }
-
 
     }
 }

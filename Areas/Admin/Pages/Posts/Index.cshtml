@@ -110,7 +110,9 @@
                     {
                         <tr id="record-@post.Id">
                             <td><input type="checkbox" name="postIds" value="@post.Id" onchange="checkOneRow(this.value, this.checked)"></td>
-                            <td>@post.Title</td>
+                            <td>
+                                <a asp-page="Edit" asp-route-id="@post.Id">@post.Title</a>
+                            </td>
                             <td>@post.CreationDate.ToString("dd/MM/yyyy")</td>
                             <td>
                                 @foreach (var category in post.CategoryPosts)
@@ -120,7 +122,6 @@
                             </td>
                             <td><a asp-page="../Authors/Profile" asp-route-id="@post.AuthorId" title="Visit Author's Profile">@post.Author.FirstName @post.Author.LastName</a></td>
                             <td>
-                                <a asp-page="Edit" asp-route-id="@post.Id" class="btn btn-primary btn-sm"><i class="fas fa fa-edit"></i> Edit</a>
                                 <button type="button" 
                                     title="Delete Post"
                                     class="btn btn-danger btn-sm btn-delete"

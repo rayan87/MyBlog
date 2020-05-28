@@ -1,6 +1,19 @@
 @model AuthorViewModel
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <a asp-page="Index" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-angle-left"></i>
+                    Back to Authors
+                </a>
+            </div>
+            <div class="col-md-6 text-right"></div>
+        </div>
+
 <div class="card bg-light">
     <form method="post" enctype="multipart/form-data">    
+        @Html.HiddenFor(x => x.Id)
         <div class="card-body">
             <div class="row">
                 <div class="col-md-4 text-center">
@@ -64,3 +77,5 @@
         </div>
     </form>
 </div>
+</div>
+</div> 

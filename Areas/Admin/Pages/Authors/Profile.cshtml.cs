@@ -11,7 +11,7 @@ using MyBlog.Data.Models;
 
 namespace MyBlog.Admin.Pages.Authors
 {
-    public class ProfileModel : PageModel
+    public class ProfileModel : AuthorViewModel
     {
         private readonly MyBlogContext _dbContext;
 
@@ -19,13 +19,15 @@ namespace MyBlog.Admin.Pages.Authors
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            Author = await _dbContext.Authors
+            var author = await _dbContext.Authors
                 .AsNoTracking()
                 .Where(x => x.Id == id)
                 .SingleOrDefaultAsync();
             
-            if (Author == null)
+            if (author == null)
                 return NotFound();
+
+            PopulateModel(author);
 
             RecentPosts = await _dbContext.Posts
                 .AsNoTracking()
@@ -51,12 +53,6 @@ namespace MyBlog.Admin.Pages.Authors
                 "author");
 
             return RedirectToPage("Index");
-        }
-
-        public Author Author
-        {
-            get;
-            private set;
         }
 
         public List<Post> RecentPosts

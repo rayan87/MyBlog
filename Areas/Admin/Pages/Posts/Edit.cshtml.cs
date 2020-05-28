@@ -13,7 +13,7 @@ using MyBlog.Data.Models;
 
 namespace MyBlog.Admin.Pages.Posts
 {
-    public class EditModel : PageModel
+    public class EditModel : PostViewModel
     {
         private readonly MyBlogContext _dbContext;
         private readonly IUploadManager _uploadManager;
@@ -59,20 +59,20 @@ namespace MyBlog.Admin.Pages.Posts
             _dbContext.Categories_Posts.RemoveRange(entity.CategoryPosts);
 
             //Update entity with entries in View Model.
-            Post.UpdateEntity(entity);
+            UpdateEntity(entity);
             
             entity.LastUpdateDate = DateTime.UtcNow;
 
             //Delete old image
-            if (Post.ImageFile != null && Post.ImageFile.Length > 0)
+            if (ImageFile != null && ImageFile.Length > 0)
             {
                 _uploadManager.RemoveFile(entity.ImageUrl);
-                entity.ImageUrl = await _uploadManager.SavePostImageAsync(Post.ImageFile);    
+                entity.ImageUrl = await _uploadManager.SavePostImageAsync(ImageFile);
             }
 
             await _dbContext.SaveChangesAsync();
 
-            this.InformUser(FormResult.Updated, Post.Title, "posts");
+            this.InformUser(FormResult.Updated, Title, "posts");
 
             if (redirectTo == "Edit")
                 return RedirectToPage("Edit", new { id = entity.Id });
@@ -107,50 +107,24 @@ namespace MyBlog.Admin.Pages.Posts
             return new JsonResult(true);
         }
 
-        private async Task prepareModelSelectLists()
-        {
-            //Categories List
-            Post.CategoriesSelectList = await _dbContext.Categories
-                    .AsNoTracking()
-                    .Select(x => new SelectListItem() { 
-                        Value = x.Id.ToString(), 
-                        Text = x.Name,
-                        Selected = Post.SelectedCategories.Contains(x.Id)
-                    }).ToListAsync();
-
-            //Authors list
-            Post.AuthorsSelectList = await _dbContext.Authors
-                    .AsNoTracking()
-                    .Select(x =>  new SelectListItem() {
-                        Text = x.FirstName + " " + x.LastName,
-                        Value = x.Id.ToString()
-                    }).ToListAsync();
-        }
-
         private async Task prepareModelForEdit(Post post)
         {
-            Post = new PostViewModel()
-            {
-                Id = post.Id,
-                Title = post.Title,
-                Description = post.Description,
-                Excerpt = post.Excerpt,
-                Tags = post.Tags,
-                AuthorId = post.AuthorId,
-                Permalink = post.Permalink,
-                CreationDate = post.CreationDate,
-                LastUpdateDate = post.LastUpdateDate,
-                ImageUrl = post.ImageUrl,
-                SelectedCategories = post.CategoryPosts.Select(x => x.CategoryId).ToArray()
-            };
-            
+            PopulateModel(post);
             await prepareModelSelectLists();
         }
 
-        [BindProperty(SupportsGet=true)]
-        public int Id {get;set;}
+        private async Task prepareModelSelectLists()
+        {
+            var categories = await _dbContext.Categories
+                    .AsNoTracking()
+                    .ToListAsync();
 
-        [BindProperty]
-        public PostViewModel Post {get;set;}
+            //Authors list
+            var authors = await _dbContext.Authors
+                    .AsNoTracking()
+                    .ToListAsync();
+
+            PopulateModelSelectLists(categories, authors);
+        }
     }
 }

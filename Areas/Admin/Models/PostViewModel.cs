@@ -6,11 +6,15 @@ using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace MyBlog.Admin.Models
 {
-    public class PostViewModel
+    [BindProperties]
+    public class PostViewModel : PageModel
     {
+        
+        [BindProperty(SupportsGet=true)]
         public int? Id { get; set; }
 
         [Display(Name = "Title", Description="Post Title"), Required]
@@ -27,12 +31,12 @@ namespace MyBlog.Admin.Models
         public string Tags {get;set;}
 
         //Multi-select
-        public List<SelectListItem> CategoriesSelectList { get; set; }
+        public IEnumerable<SelectListItem> CategoriesSelectList { get; set; }
 
         [Display(Name="Author"), Required]
         public int AuthorId {get;set;}
 
-        public List<SelectListItem> AuthorsSelectList {get;set;}
+        public IEnumerable<SelectListItem> AuthorsSelectList {get;set;}
 
         [Display(Name = "Permalink"), Required, PageRemote(
             ErrorMessage ="Permalink already exists", 
@@ -74,6 +78,45 @@ namespace MyBlog.Admin.Models
                     entity.CategoryPosts.Add(new CategoryPost() { CategoryId = catId });
         }
 
+        protected void PopulateModel(Post entity)
+        {
+            Id = entity.Id;
+            Title = entity.Title;
+            Description = entity.Description;
+            Excerpt = entity.Excerpt;
+            Tags = entity.Tags;
+            AuthorId = entity.AuthorId;
+            Permalink = entity.Permalink;
+            CreationDate = entity.CreationDate;
+            LastUpdateDate = entity.LastUpdateDate;
+            ImageUrl = entity.ImageUrl;
+            SelectedCategories = entity.CategoryPosts.Select(x => x.CategoryId).ToArray();
 
+        }
+
+        protected void PopulateModel(Post entity, List<Category> categories, List<Author> authors)
+        {
+            PopulateModel(entity);
+            PopulateModelSelectLists(categories, authors);
+        }
+
+        protected void PopulateModelSelectLists(List<Category> categories, List<Author> authors)
+        {
+            //Categories List
+            CategoriesSelectList = categories
+                    .Select(x => new SelectListItem() { 
+                        Value = x.Id.ToString(), 
+                        Text = x.Name,
+                        Selected = SelectedCategories != null && SelectedCategories.Contains(x.Id)
+                    });
+
+            //Authors list
+            AuthorsSelectList = authors
+                    .Select(x =>  new SelectListItem() {
+                        Text = x.FirstName + " " + x.LastName,
+                        Value = x.Id.ToString(),
+                        Selected = x.Id == AuthorId
+                    });
+        }
     }
 }

@@ -2,23 +2,10 @@
 @model MyBlog.Admin.Pages.Authors.EditModel
 @{
     ViewData["Title"] = $"Edit Author";
-    ViewData["SubTitle"] = $"{Model.Author.FirstName} {Model.Author.LastName}";
+    ViewData["SubTitle"] = $"{Model.FirstName} {Model.LastName}";
 }
 
-<div class="row">
-    <div class="col-md-6 offset-md-3">
-        <div class="row mb-2">
-            <div class="col-md-6">
-                <a asp-page="Index" class="btn btn-outline-secondary btn-sm">
-                    <i class="fas fa-angle-left"></i>
-                    Back to Authors
-                </a>
-            </div>
-            <div class="col-md-6 text-right"></div>
-        </div>
-        <partial name="_NewEdit" model="Model.Author">
-    </div>
-</div> 
+<partial name="_NewEdit">
 
 @section Scripts
 {
