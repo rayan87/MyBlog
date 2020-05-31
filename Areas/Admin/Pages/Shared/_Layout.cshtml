@@ -46,7 +46,29 @@
         </div>
       </div>
     </form>
-
+    <ul class="navbar-nav ml-auto">
+      <!-- Messages Dropdown Menu -->
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#">
+          <img src="/admin/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image" width="30">
+          <span class="ml-1">
+            @User.Identity.Name
+            <i class="fas fa-caret-down"></i>
+          </span>
+        </a>
+        <div class="dropdown-menu dropdown-menu dropdown-menu-right">
+          <form action="/Account/Logout" method="post">
+            <button class="dropdown-item">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </form>
+          
+          @* <a asp-page="/Account/Logout" class="dropdown-item">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </a> *@
+        </div>
+      </li>
+    </ul>
   </nav>
   <!-- /.navbar -->
 

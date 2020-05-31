@@ -1,0 +1,59 @@
+@page
+@model MyBlog.Admin.Pages.Account.RegisterModel
+@{
+    Layout = "_EmptyLayout";
+    ViewData["Title"] = "Register an Admin";
+    ViewData["BackgroundImage"] = "/admin/dist/img/bg/asphalt-road-between-trees.jpg";
+}
+
+<p class="login-box-msg">Register a new membership</p>
+
+<form method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+<div class="input-group mb-3">
+    <input asp-for="FullName" class="form-control">
+    <div class="input-group-append">
+    <div class="input-group-text">
+        <span class="fas fa-user"></span>
+    </div>
+    </div>
+    <span asp-validation-for="FullName"></span>
+</div>
+<div class="input-group mb-3">
+    <input asp-for="Email" class="form-control">
+    <div class="input-group-append">
+    <div class="input-group-text">
+        <span class="fas fa-envelope"></span>
+    </div>
+    </div>
+    <span asp-validation-for="Email"></span>
+</div>
+<div class="input-group mb-3">
+    <input asp-for="Password" class="form-control">
+    <div class="input-group-append">
+    <div class="input-group-text">
+        <span class="fas fa-lock"></span>
+    </div>
+    </div>
+    <span asp-validation-for="Password"></span>
+</div>
+<div class="input-group mb-3">
+    <input asp-for="ConfirmPassword" class="form-control">
+    <div class="input-group-append">
+    <div class="input-group-text">
+        <span class="fas fa-lock"></span>
+    </div>
+    </div>
+    <span asp-validation-for="ConfirmPassword"></span>
+</div>
+<div class="row mb-2">
+    <div class="col-8">
+        <a asp-page="Login" class="text-center">I already have an account</a>
+    </div>
+    <div class="col-4">
+        <button type="submit" class="btn btn-primary btn-block">Register</button>
+    </div>
+</div>
+</form>
+
+
