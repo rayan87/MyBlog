@@ -20,12 +20,7 @@ namespace MyBlog.Admin.Pages.Account
             _signInManager = signInManager;
         }
 
-        public IActionResult OnGet()
-        {
-            return NotFound();
-        }
-
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnGet()
         {
             if (_signInManager.IsSignedIn(User))
             {
