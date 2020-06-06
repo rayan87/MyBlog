@@ -39,17 +39,25 @@ namespace MyBlog.Admin.Pages.Account
                 return Page();
             
             var signInResult = await _signInManager.PasswordSignInAsync(Email, Password, RememberMe, false);
-            if (!signInResult.Succeeded)
-            {
-                ModelState.AddModelError("", "Email or password is invalid.");
-                return Page();
-            }
+            UserManager<AdminUser> userManager;
             
-            //Logged-in successfully
-            return RedirectToPage("/Index");
+            if (signInResult.Succeeded)
+                //Logged-in successfully
+                return RedirectToPage("/Index");
+            else if (signInResult.IsNotAllowed)
+                //Logged-in but, Email not confirmed
+                DisplayNotConfirmedError = true;
+            else
+                //Invalid login attempt
+                ModelState.AddModelError("", "Email or password is invalid.");
+            
+            return Page();
+            
         }
 
         #region Properties
+
+        public bool DisplayNotConfirmedError {get;private set;}
 
         [BindProperty] 
         [Required]

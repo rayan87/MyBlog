@@ -1,10 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using MyBlog.Admin.Services.Email;
 using MyBlog.Data.Models;
 
 namespace MyBlog.Admin.Pages.Account
@@ -13,12 +15,15 @@ namespace MyBlog.Admin.Pages.Account
     {
         private readonly UserManager<AdminUser> _userManager;
         private readonly SignInManager<AdminUser> _signInManager;
+        private readonly IEmailSender _emailSender;
 
         public RegisterModel(UserManager<AdminUser> userManager,
-            SignInManager<AdminUser> signInManager)
+            SignInManager<AdminUser> signInManager,
+            IEmailSender emailSender)
         {
             _userManager = userManager;    
             _signInManager = signInManager;
+            _emailSender = emailSender;
         }
 
         #region Handlers
@@ -57,8 +62,13 @@ namespace MyBlog.Admin.Pages.Account
             var result = await _userManager.CreateAsync(admin, Password);
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(admin, isPersistent: false);
-                return RedirectToPage("/Index");
+                //try sending registration confirmation email
+                bool isEmailSent = await sendVerificationEmail(admin);
+
+                if (isEmailSent)
+                    return RedirectToPage("RegisterConfirmation");
+                else
+                    return RedirectToPage("ResendRegistrationCode");
             }
             else
             {
@@ -67,6 +77,26 @@ namespace MyBlog.Admin.Pages.Account
 
                 return Page();
             }
+        }
+
+        private async Task<bool> sendVerificationEmail(AdminUser user)
+        {
+            string emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            string emailConfirmationLink = Url.Page("VerifyAccount", 
+                null,
+                new { userId = user.Id, code = emailConfirmationToken},
+                Request.Scheme);
+
+            string subject = "Verify Your Account";
+
+            StringBuilder emailMessage = new StringBuilder();
+            emailMessage.AppendFormat("<p>Dear {0}, </p><br>");
+            emailMessage.AppendFormat("<p>Please confirm your registration as Administrator to My Blog Control Panel by clicking on the link below:</p>");
+            emailMessage.AppendFormat("<div style=\"border:1px solid #b2b2b2;background-color:#f2f2f2;padding:5px\"><a href=\"{0}\">{0}</a></div>",
+                emailConfirmationLink);
+
+            return await _emailSender.SendAsync(user.Email, subject, emailMessage.ToString());
         }
 
         #endregion

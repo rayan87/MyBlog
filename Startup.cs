@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyBlog.Admin.Services;
+using MyBlog.Admin.Services.Email;
 using MyBlog.Data;
 using MyBlog.Data.Models;
 
@@ -35,15 +36,21 @@ namespace MyBlog
                         .AllowAnonymousToAreaFolder("Admin", "/Account");
                 });
             services.AddDbContext<MyBlogContext>();
+            
+            services.AddIdentity<AdminUser, IdentityRole>(options => {
+                    options.SignIn.RequireConfirmedEmail = true;
+                })
+                .AddEntityFrameworkStores<MyBlogContext>()
+                .AddDefaultTokenProviders();
 
-            services.AddIdentity<AdminUser, IdentityRole>()
-                .AddEntityFrameworkStores<MyBlogContext>();
-
-            services
-                .ConfigureApplicationCookie(config => 
-                    config.LoginPath = "/Admin/Account/Login");
+            services.ConfigureApplicationCookie(config => 
+                {
+                    config.LoginPath = "/Admin/Account/Login";
+                });
 
             services.AddTransient<IUploadManager, UploadManager>();
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.Configure<AuthMessageSenderOptions>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

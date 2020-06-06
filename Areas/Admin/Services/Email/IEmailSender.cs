@@ -4,6 +4,6 @@ namespace MyBlog.Admin.Services.Email
 {
     public interface IEmailSender
     {
-        Task SendAsync(string email, string subject, string message);
+        Task<bool> SendAsync(string email, string subject, string message);
     } 
 }
