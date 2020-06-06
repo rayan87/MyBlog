@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace MyBlog.Admin.Pages.Account
 {
-    public class ResendRegistrationCodeModel : PageModel
+    public class SendCodeModel : PageModel
     {
         public void OnGet(string source)
         {
@@ -16,6 +16,10 @@ namespace MyBlog.Admin.Pages.Account
                 ModelState.AddModelError("", "Cannot send registration confirmation email.");
         }
 
+        public async Task OnPostAsync()
+        {
+            
+        }
 
         public bool DisplayRegistrationError {get; private set;}
         

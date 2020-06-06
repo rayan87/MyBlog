@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,12 +11,15 @@ namespace MyBlog.Admin.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<AdminUser> _signInManager;
+        private readonly UserManager<AdminUser> _userManager;
         private readonly IWebHostEnvironment _environment;
 
         public LoginModel(SignInManager<AdminUser> signInManager,
+            UserManager<AdminUser> userManager,
             IWebHostEnvironment environment)
         {
             _signInManager = signInManager;
+            _userManager = userManager;
             _environment = environment;
         }
 
@@ -38,21 +36,23 @@ namespace MyBlog.Admin.Pages.Account
             if (!ModelState.IsValid)
                 return Page();
             
-            var signInResult = await _signInManager.PasswordSignInAsync(Email, Password, RememberMe, false);
-            UserManager<AdminUser> userManager;
-            
-            if (signInResult.Succeeded)
-                //Logged-in successfully
-                return RedirectToPage("/Index");
-            else if (signInResult.IsNotAllowed)
-                //Logged-in but, Email not confirmed
-                DisplayNotConfirmedError = true;
-            else
+            var user = await _userManager.FindByEmailAsync(Email);
+            if (user == null || !(await _userManager.CheckPasswordAsync(user, Password)))
+            {
                 //Invalid login attempt
                 ModelState.AddModelError("", "Email or password is invalid.");
-            
-            return Page();
-            
+                return Page();
+            }
+                
+            bool isEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
+            if (!isEmailConfirmed)
+            {
+                DisplayNotConfirmedError = true;
+                return Page();
+            }
+
+            await _signInManager.SignInAsync(user, RememberMe);
+            return RedirectToPage("/Index");
         }
 
         #region Properties

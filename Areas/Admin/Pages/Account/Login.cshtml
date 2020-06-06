@@ -6,19 +6,19 @@
     ViewData["BackgroundImage"] = $"/admin/dist/img/bg/background-balance-business-commerce.jpg";
 }
 
-    <p class="login-box-msg">Sign in to start your session</p>
-    @if (Model.DisplayNotConfirmedError)
-    {
-        <div class="alert alert-default-danger">
-            <h4 class="alert-heading">Email not Confirmed</h4>
-            <p>Please check your email to confirm your account. Didn't receive any confirmation email?
-                <a class="alert-link" asp-page="ResendRegistrationCode">Resend confirmation email</a>
-            </p>
-        </div>
-    }
-    <div asp-validation-summary="All" class="text-danger"></div>
+<p class="login-box-msg">Sign in to start your session</p>
+@if (Model.DisplayNotConfirmedError)
+{
+    <div class="alert alert-default-danger">
+        <h4 class="alert-heading">Email not Confirmed</h4>
+        <p>Please check your email to confirm your account. Didn't receive any confirmation email?
+            <a class="alert-link" asp-page="ResendRegistrationCode">Resend confirmation email</a>
+        </p>
+    </div>
+}
+<div asp-validation-summary="All" class="text-danger"></div>
 
-    <form method="post">
+<form method="post">
     <div class="input-group mb-3">
         <input asp-for="Email" class="form-control" autocomplete="none">
         <div class="input-group-append">
@@ -52,12 +52,11 @@
         </div>
         <!-- /.col -->
     </div>
-    </form>
+</form>
 
-    <p class="mb-1">
+<p class="mb-1">
     <a asp-page="ForgotPassword">I forgot my password</a>
-    </p>
-    <p class="mb-0">
+</p>
+<p class="mb-0">
     <a asp-page="Register" class="text-center">Register a new acount</a>
-    </p>
-    
+</p>
