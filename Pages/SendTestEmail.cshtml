@@ -1,0 +1,23 @@
+﻿@page
+@model MyBlog.Pages.SendTestEmailModel
+@{
+}
+@if (Model.EmailSent)
+{
+
+    <div>
+        <h4>Email was sent successfully!</h4>
+    </div>
+}
+<form method="post">
+    <label>Email: </label>
+    <input asp-for="ToEmail">
+<br>
+    <label>Subject: </label>
+    <input asp-for="Subject">
+    <br>
+    <label>Body: </label>
+    <textarea asp-for="Body"></textarea>
+    <br><br>
+    <input type="submit">
+</form>

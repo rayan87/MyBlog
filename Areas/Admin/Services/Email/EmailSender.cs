@@ -19,11 +19,11 @@ namespace MyBlog.Admin.Services.Email
         public async Task<bool> SendAsync(string email, string subject, string message)
         {
             var client = new SendGridClient(Options.SendGridKey);
+            
             var msg = new SendGridMessage()
             {
                 From = new EmailAddress("mahmoud.rayan@live.com", "My Blog"),
                 Subject = subject,
-                PlainTextContent = message,
                 HtmlContent = message
             };
             
