@@ -1,8 +1,9 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 
 namespace MyBlog.Data.Models
 {
-    public class AdminUser : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
         public string FirstName {get;set;}
 

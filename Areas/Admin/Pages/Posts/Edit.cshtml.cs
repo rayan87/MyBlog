@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -17,11 +18,15 @@ namespace MyBlog.Admin.Pages.Posts
     {
         private readonly MyBlogContext _dbContext;
         private readonly IUploadManager _uploadManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public EditModel(MyBlogContext dbContext, IUploadManager uploadManager) 
+        public EditModel(MyBlogContext dbContext, 
+            IUploadManager uploadManager, 
+            UserManager<ApplicationUser> userManager) 
         { 
             _dbContext = dbContext;
             _uploadManager = uploadManager;
+            _userManager = userManager; 
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -125,6 +130,24 @@ namespace MyBlog.Admin.Pages.Posts
                     .ToListAsync();
 
             PopulateModelSelectLists(categories, authors);
+            setupViewPrivilages(authors);
         }
+
+        
+        private void setupViewPrivilages(ICollection<Author> authors)
+        {
+            if (User.IsInRole("Admin"))
+            {
+                CanSelectAuthor = true;
+            }
+            else if (User.IsInRole("Author"))
+            {
+                string userId = _userManager.GetUserId(User);
+                AuthorName = authors.Where(x => x.UserId == userId)
+                    .Select(x => x.FirstName + " " + x.LastName)
+                    .FirstOrDefault();
+            }
+        }
+
     }
 }

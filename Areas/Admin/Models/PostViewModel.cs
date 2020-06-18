@@ -13,7 +13,6 @@ namespace MyBlog.Admin.Models
     [BindProperties]
     public class PostViewModel : PageModel
     {
-        
         [BindProperty(SupportsGet=true)]
         public int? Id { get; set; }
 
@@ -35,6 +34,8 @@ namespace MyBlog.Admin.Models
 
         [Display(Name="Author"), Required]
         public int AuthorId {get;set;}
+
+        public string AuthorName {get;set;}
 
         public IEnumerable<SelectListItem> AuthorsSelectList {get;set;}
 
@@ -118,5 +119,13 @@ namespace MyBlog.Admin.Models
                         Selected = x.Id == AuthorId
                     });
         }
+        
+        #region Privilige Properties
+
+        public bool CanSelectAuthor {get;set;}
+
+        #endregion
+        
+
     }
 }

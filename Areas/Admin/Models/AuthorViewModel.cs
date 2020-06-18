@@ -19,6 +19,22 @@ namespace MyBlog.Admin.Models
         [Display(Name = "Last Name")]
         public string LastName {get;set;}
 
+        [Display(Name = "Email")]
+        [Required]
+        [DataType(DataType.EmailAddress)]
+        public string Email {get;set;}
+
+        [Display(Name = "Password")]
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password {get;set;}
+
+
+        [Display(Name = "Confirm Password")]
+        [Required]
+        [DataType(DataType.Password)]
+        public string ConfirmPassword {get;set;}
+
         [Display(Name = "Job Title")]
         public string JobTitle {get;set;}
 
@@ -47,9 +63,9 @@ namespace MyBlog.Admin.Models
             JobTitle = entity.JobTitle;
             ShortBio = entity.ShortBio;
             FullBio = entity.FullBio;
-            PhotoUrl = entity.ImageUrl;
+            PhotoUrl = entity.PhotoUrl;
             Permalink = entity.Permalink;
         }
-        
+
     }
 }

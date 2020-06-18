@@ -13,9 +13,9 @@ namespace MyBlog.Admin.Pages.Account
     [Authorize]
     public class LogoutModel : PageModel
     {
-        private readonly SignInManager<AdminUser> _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public LogoutModel(SignInManager<AdminUser> signInManager)
+        public LogoutModel(SignInManager<ApplicationUser> signInManager)
         {
             _signInManager = signInManager;
         }

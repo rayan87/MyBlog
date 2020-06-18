@@ -2,17 +2,15 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyBlog.Data;
 
-namespace MyBlog.Data.Migrations
+namespace MyBlog.Migrations
 {
     [DbContext(typeof(MyBlogContext))]
-    [Migration("20200529144118_IdentityAdded")]
-    partial class IdentityAdded
+    partial class MyBlogContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,6 +40,22 @@ namespace MyBlog.Data.Migrations
                         .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "2c209d9d-0d49-4634-988c-1c7ce8dbb84e",
+                            ConcurrencyStamp = "cba57e41-1af7-4ddd-b840-9680e63b7970",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "d6aedf85-8ee7-44f3-9796-de8fa38dce3f",
+                            ConcurrencyStamp = "9f888f24-45e2-4c8e-b0e1-7ab415413e25",
+                            Name = "Author",
+                            NormalizedName = "AUTHOR"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -77,6 +91,10 @@ namespace MyBlog.Data.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -129,6 +147,8 @@ namespace MyBlog.Data.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -224,10 +244,6 @@ namespace MyBlog.Data.Migrations
                     b.Property<string>("FullBio")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(500);
-
                     b.Property<string>("JobTitle")
                         .HasColumnType("TEXT");
 
@@ -239,10 +255,19 @@ namespace MyBlog.Data.Migrations
                         .HasColumnType("TEXT")
                         .HasMaxLength(500);
 
+                    b.Property<string>("PhotoUrl")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(500);
+
                     b.Property<string>("ShortBio")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Authors");
                 });
@@ -323,6 +348,22 @@ namespace MyBlog.Data.Migrations
                     b.ToTable("Posts");
                 });
 
+            modelBuilder.Entity("MyBlog.Data.Models.ApplicationUser", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PhotoUrl")
+                        .HasColumnType("TEXT");
+
+                    b.HasDiscriminator().HasValue("ApplicationUser");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -372,6 +413,13 @@ namespace MyBlog.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MyBlog.Data.Models.Author", b =>
+                {
+                    b.HasOne("MyBlog.Data.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("MyBlog.Data.Models.CategoryPost", b =>

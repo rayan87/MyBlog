@@ -121,10 +121,17 @@
                 </h3>
             </div>
             <div class="card-body">
-                <select asp-for="AuthorId" asp-items="Model.AuthorsSelectList" class="form-control">
-                    <option value="">Select</option>
-                </select>
-                <span asp-validation-for="AuthorId"></span>
+                @if (Model.CanSelectAuthor)
+                {
+                    <select asp-for="AuthorId" asp-items="Model.AuthorsSelectList" class="form-control">
+                        <option value="">Select</option>
+                    </select>
+                    <span asp-validation-for="AuthorId"></span>
+                }
+                else
+                {
+                    <span>@Model.AuthorName</span>
+                }
             </div>
         </div>
         <div class="card card-primary card-outline">

@@ -12,9 +12,9 @@ namespace MyBlog.Admin.Pages.Account
 {
     public class ResetPasswordModel : PageModel
     {
-        private readonly UserManager<AdminUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ResetPasswordModel(UserManager<AdminUser> userManager)
+        public ResetPasswordModel(UserManager<ApplicationUser> userManager)
             => _userManager = userManager;
 
         public async Task OnGetAsync()

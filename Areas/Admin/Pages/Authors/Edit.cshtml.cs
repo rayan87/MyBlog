@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using MyBlog.Data;
 
 namespace MyBlog.Admin.Pages.Authors
 {
+    [Authorize(Roles = "Admin")]
     public class EditModel : AuthorViewModel
     {
         private readonly MyBlogContext _dbContext;
@@ -42,7 +44,7 @@ namespace MyBlog.Admin.Pages.Authors
             var entity = await _dbContext.Authors.FindAsync(Id);
             if (entity == null)
                 return BadRequest();
-
+            
             entity.FirstName = FirstName;
             entity.LastName = LastName;
             entity.JobTitle = JobTitle;
@@ -50,8 +52,9 @@ namespace MyBlog.Admin.Pages.Authors
             entity.ShortBio = ShortBio;
             entity.Permalink = Permalink;
             
+            
             if (PhotoFile != null && PhotoFile.Length > 0)
-                entity.ImageUrl = await _uploadManager.SaveAuthorImageAsync(PhotoFile);
+                entity.PhotoUrl = await _uploadManager.SaveAuthorImageAsync(PhotoFile);
             
             await _dbContext.SaveChangesAsync();
 

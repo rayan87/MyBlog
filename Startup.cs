@@ -37,7 +37,7 @@ namespace MyBlog
                 });
             services.AddDbContext<MyBlogContext>();
             
-            services.AddIdentity<AdminUser, IdentityRole>(options => {
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => {
                     options.SignIn.RequireConfirmedEmail = true;
                 })
                 .AddEntityFrameworkStores<MyBlogContext>()

@@ -13,12 +13,12 @@ namespace MyBlog.Admin.Pages.Account
 {
     public class RegisterModel : PageModel
     {
-        private readonly UserManager<AdminUser> _userManager;
-        private readonly SignInManager<AdminUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
 
-        public RegisterModel(UserManager<AdminUser> userManager,
-            SignInManager<AdminUser> signInManager,
+        public RegisterModel(UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender)
         {
             _userManager = userManager;    
@@ -30,8 +30,8 @@ namespace MyBlog.Admin.Pages.Account
 
         public async Task<IActionResult> OnGetAsync()
         {
-            //If there are users in the db, just redirect to login.
-            bool dbHasUsers = await _userManager.Users.AnyAsync();
+            //There shouldn't be admins to register
+            bool dbHasUsers = (await _userManager.GetUsersInRoleAsync("Admin")).Any();
             if (dbHasUsers)
                 return RedirectToPage("Login");
             
@@ -51,24 +51,26 @@ namespace MyBlog.Admin.Pages.Account
             }
 
             var names = FullName.Split(' ');
-            var admin = new AdminUser()
+            var user = new ApplicationUser()
             {
                 FirstName = names[0],
                 LastName = names.Length > 1 ? names[1] : null,
                 Email = Email,
                 UserName = Email
             };
-
-            var result = await _userManager.CreateAsync(admin, Password);
+            
+            var result = await _userManager.CreateAsync(user, Password);
+            
             if (result.Succeeded)
             {
+                await _userManager.AddToRoleAsync(user, "Admin");
                 //try sending registration confirmation email
-                bool isEmailSent = await sendVerificationEmail(admin);
+                bool isEmailSent = await sendVerificationEmail(user);
 
                 if (isEmailSent)
                     return RedirectToPage("RegisterConfirmation");
                 else
-                    return RedirectToPage("ResendRegistrationCode");
+                    return RedirectToPage("SendCode");
             }
             else
             {
@@ -79,7 +81,7 @@ namespace MyBlog.Admin.Pages.Account
             }
         }
 
-        private async Task<bool> sendVerificationEmail(AdminUser user)
+        private async Task<bool> sendVerificationEmail(ApplicationUser user)
         {
             string emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
@@ -91,7 +93,7 @@ namespace MyBlog.Admin.Pages.Account
             string subject = "Verify Your Account";
 
             StringBuilder emailMessage = new StringBuilder();
-            emailMessage.AppendFormat("<p>Dear {0}, </p><br>");
+            emailMessage.AppendFormat("<p>Dear {0}, </p><br>", user.FirstName);
             emailMessage.AppendFormat("<p>Please confirm your registration as Administrator to My Blog Control Panel by clicking on the link below:</p>");
             emailMessage.AppendFormat("<div style=\"border:1px solid #b2b2b2;background-color:#f2f2f2;padding:5px\"><a href=\"{0}\">{0}</a></div>",
                 emailConfirmationLink);

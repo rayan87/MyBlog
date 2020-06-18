@@ -14,10 +14,10 @@ namespace MyBlog.Admin.Pages.Account
 {
     public class SendCodeModel : PageModel
     {
-        private readonly UserManager<AdminUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
 
-        public SendCodeModel(UserManager<AdminUser> userManager,
+        public SendCodeModel(UserManager<ApplicationUser> userManager,
             IEmailSender emailSender)
         {
             _userManager = userManager;
@@ -61,12 +61,12 @@ namespace MyBlog.Admin.Pages.Account
             }
         }
 
-        private async Task<bool> sendVerificationEmail(AdminUser user)
+        private async Task<bool> sendVerificationEmail(ApplicationUser user)
         {
             string emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
             string emailConfirmationLink = Url.Page("VerifyAccount", 
-                null,
+                "",
                 new { userId = user.Id, code = emailConfirmationToken},
                 Request.Scheme);
 

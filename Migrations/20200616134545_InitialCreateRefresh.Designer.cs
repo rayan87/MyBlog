@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyBlog.Data;
 
-namespace MyBlog.Data.Migrations
+namespace MyBlog.Migrations
 {
     [DbContext(typeof(MyBlogContext))]
-    [Migration("20200530071600_AdminUsersAdded")]
-    partial class AdminUsersAdded
+    [Migration("20200616134545_InitialCreateRefresh")]
+    partial class InitialCreateRefresh
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,6 +42,22 @@ namespace MyBlog.Data.Migrations
                         .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "2c209d9d-0d49-4634-988c-1c7ce8dbb84e",
+                            ConcurrencyStamp = "cba57e41-1af7-4ddd-b840-9680e63b7970",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "d6aedf85-8ee7-44f3-9796-de8fa38dce3f",
+                            ConcurrencyStamp = "9f888f24-45e2-4c8e-b0e1-7ab415413e25",
+                            Name = "Author",
+                            NormalizedName = "AUTHOR"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -230,10 +246,6 @@ namespace MyBlog.Data.Migrations
                     b.Property<string>("FullBio")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(500);
-
                     b.Property<string>("JobTitle")
                         .HasColumnType("TEXT");
 
@@ -245,10 +257,19 @@ namespace MyBlog.Data.Migrations
                         .HasColumnType("TEXT")
                         .HasMaxLength(500);
 
+                    b.Property<string>("PhotoUrl")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(500);
+
                     b.Property<string>("ShortBio")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Authors");
                 });
@@ -329,7 +350,7 @@ namespace MyBlog.Data.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("MyBlog.Data.Models.AdminUser", b =>
+            modelBuilder.Entity("MyBlog.Data.Models.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
@@ -342,7 +363,7 @@ namespace MyBlog.Data.Migrations
                     b.Property<string>("PhotoUrl")
                         .HasColumnType("TEXT");
 
-                    b.HasDiscriminator().HasValue("AdminUser");
+                    b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -394,6 +415,13 @@ namespace MyBlog.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MyBlog.Data.Models.Author", b =>
+                {
+                    b.HasOne("MyBlog.Data.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("MyBlog.Data.Models.CategoryPost", b =>

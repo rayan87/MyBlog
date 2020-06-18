@@ -10,12 +10,12 @@ namespace MyBlog.Admin.Pages.Account
 {
     public class LoginModel : PageModel
     {
-        private readonly SignInManager<AdminUser> _signInManager;
-        private readonly UserManager<AdminUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IWebHostEnvironment _environment;
 
-        public LoginModel(SignInManager<AdminUser> signInManager,
-            UserManager<AdminUser> userManager,
+        public LoginModel(SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager,
             IWebHostEnvironment environment)
         {
             _signInManager = signInManager;

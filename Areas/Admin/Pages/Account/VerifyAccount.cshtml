@@ -1,0 +1,32 @@
+﻿@page
+@model MyBlog.Admin.Pages.Account.VerifyAccountModel
+@{
+    Layout = "_EmptyLayout";
+    ViewData["Title"] = "Verify Account";
+    ViewData["BackgroundImage"] = "/admin/dist/img/bg/asphalt-road-between-trees.jpg";
+}
+
+@if (Model.Succeeded)
+{
+    <div class="alert alert-success">
+        <h4 class="alert-heading"><i class="fas fa-check-circle text-success"></i> Account Verified</h4>
+        <p>Thank you for registering with My Blog.</p>
+    </div>
+} 
+else 
+{
+    <div class="alert alert-default-danger">
+        <h4 class="alert-heading"><i class="fas fa-times-circle text-danger"></i> Account Verification Failed</h4>
+        @if (Model.AdditionalErrors != null)
+        {
+            foreach (var err in Model.AdditionalErrors)
+            {
+                <p>@err</p>
+            }
+        }
+    </div>
+}
+
+<p class="mt-3"><a asp-page="Login"><i class="fas fa-angle-left"></i> Back to login</a></p>
+
+

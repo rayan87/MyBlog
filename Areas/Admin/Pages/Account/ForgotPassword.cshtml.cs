@@ -14,10 +14,10 @@ namespace MyBlog.Admin.Pages.Account
 {
     public class ForgotPasswordModel : PageModel
     {
-        private readonly UserManager<AdminUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
 
-        public ForgotPasswordModel(UserManager<AdminUser> userManager,
+        public ForgotPasswordModel(UserManager<ApplicationUser> userManager,
             IEmailSender emailSender)
         {
             _userManager = userManager;
@@ -45,7 +45,7 @@ namespace MyBlog.Admin.Pages.Account
             }
         }
 
-        private async Task<bool> sendPasswordResetEmail(AdminUser user)
+        private async Task<bool> sendPasswordResetEmail(ApplicationUser user)
         {
             //generate reset password token.
             var passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -61,8 +61,8 @@ namespace MyBlog.Admin.Pages.Account
             //prepare email message
             var emailMessage = new StringBuilder();
 
-            emailMessage.AppendFormat("<p>Dear {0}</p><br><br>", user.FirstName);
-            emailMessage.AppendFormat("<p>You requested to reset your password.</p><br>");
+            emailMessage.AppendFormat("<p>Dear {0}</p><br>", user.FirstName);
+            emailMessage.AppendFormat("<p>You requested to reset your password.</p>");
             emailMessage.AppendFormat("<p>Click on the following link to reset your password:</p>");
             emailMessage.AppendFormat("<div style=\"border:1px solid #b2b2b2;background-color:#f2f2f2;padding:5px\"><a href=\"{0}\">{0}</a></div>",
                 passwordResetLink);

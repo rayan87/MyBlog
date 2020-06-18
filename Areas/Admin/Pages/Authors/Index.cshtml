@@ -31,7 +31,7 @@
                             <p><b>Posts: </b> <a asp-page="/Posts/Index" asp-route-authorId="@author.Id">@author.Posts.Count Posts</a></p>
                         </div>
                         <div class="col-5 text-center">
-                            <img src="/@(!string.IsNullOrEmpty(author.ImageUrl) ? author.ImageUrl : "admin/dist/img/user1-128x128.jpg")" alt="" class="img-circle img-fluid">
+                            <img src="/@(!string.IsNullOrEmpty(author.PhotoUrl) ? author.PhotoUrl : "admin/dist/img/user1-128x128.jpg")" alt="" class="img-circle img-fluid">
                         </div>
                     </div>
                 </div>
